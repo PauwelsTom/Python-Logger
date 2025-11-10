@@ -74,7 +74,7 @@ class Logger:
         str = "[DEBUG]\t - " + msg
         self.buffer += str + "\n"
         
-        if self.debug:
+        if self.debug_mode:
             self.print(str, color=Colors.YELLOW)
 
     def section(self, name, length=80, char=".", padding=2, color=Colors.DEFAULT):
@@ -114,9 +114,7 @@ class Logger:
         try:
             with open(path, "w", encoding="utf-8") as f:
                 f.write(self.buffer)
-            if self.debug_mode:
-                self.success(f"Logs saved to {path}")
+            self.success(f"Logs saved to {path}")
         except Exception as e:
-            if self.debug_mode:
-                self.fail(f"Could not save logs: {e}")
+            self.fail(f"Could not save logs: {e}")
 
