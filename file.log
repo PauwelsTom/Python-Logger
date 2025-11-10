@@ -1,0 +1,5 @@
+[LOG]	 - Hello, world!
+[LOG]	 - This is a log
+[WARN]	 - This is a warning
+[ERROR]	 - This is an error
+[DEBUG]	 - This is a debug
