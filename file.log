@@ -1,5 +1,6 @@
-[LOG]	 - Hello, world!
-[LOG]	 - This is a log
-[WARN]	 - This is a warning
-[ERROR]	 - This is an error
-[DEBUG]	 - This is a debug
+[LOG]	 11/11/2025, 11:48:54	- Debut des logs
+
+[LOG]	 00:00:00.105	- On recupère les datas
+[WARN]	 00:00:00.309	- Attention, la liste est vide
+[LOG]	 00:00:00.411	- Site créé
+[ERROR]	 00:00:00.916	- Pas d'accès internet
