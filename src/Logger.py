@@ -1,15 +1,21 @@
 from Data import Colors, TimeMode
 import time
+import os
 from datetime import datetime
 
 class Logger:
-    def __init__(self, debug=False, time_mode=TimeMode.CHRONO):
+    def __init__(self, debug=False, time_mode=TimeMode.CHRONO, clear=True):
         self.default_color = Colors.DEFAULT
         self.buffer = ""
         self.debug_mode = debug
         self.time_mode = time_mode
         self.start = None
-        pass
+        if clear:
+            self.clear_stdout()
+
+    def clear_stdout(self):
+        """ Clearing stdout """
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     def print(self, msg, color=Colors.DEFAULT):
         """ Print into stdout """
