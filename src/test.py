@@ -79,3 +79,15 @@ def test_time():
     l.log("Tentative de time")
     time.sleep(0.1)
     l.error("C'est la meme indentation ?")
+
+def simulation_utilisation():
+    l.init()
+    time.sleep(0.1)
+    l.log("On recupère les datas")
+    time.sleep(0.2)
+    l.warn("Attention, la liste est vide")
+    time.sleep(0.1)
+    l.log("Site créé")
+    time.sleep(0.5)
+    l.error("Pas d'accès internet")
+    l.end()

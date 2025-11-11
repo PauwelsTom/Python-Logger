@@ -32,6 +32,40 @@ class Logger:
             print(color.value + msg[index], end='')
             
         print(self.default_color.value)
+    
+    def init(self):
+        """ Initialize logger """
+        self.cadre("DEBUT DES LOGS", padding=2, color=Colors.BLUE)
+        if self.time_mode == TimeMode.CHRONO:
+            self.start_timer()
+
+        mode = self.time_mode
+        self.time_mode = TimeMode.DATE
+        self.log("Debut des logs\n", dark=True)
+        self.time_mode = mode
+    
+    def end(self, path="./file.log"):
+        """ End of logs """
+        elapsed = self.stop_timer()
+        temps = ""
+        hours = int(elapsed // 3600)
+        if hours > 0:
+            temps += f"{hours:02}h "
+
+        minutes = int((elapsed % 3600) // 60)
+        if minutes > 0 or temps != "":
+            temps += f"{minutes:02}min "
+
+        seconds = int(elapsed % 60)
+        if seconds > 0 or temps != "":
+            temps += f"{seconds:02}s "
+
+        milliseconds = int((elapsed * 1000) % 1000)
+        temps += f"{milliseconds:03}ms"
+        self.section("END OF LOGS", char="=", color=Colors.BLUE)
+        self.print(f"\nExecution time: {temps}\n", color=Colors.BLUE)
+        self.save(path)
+
 
     def start_timer(self):
         """ Start log timer """
@@ -65,13 +99,14 @@ class Logger:
             return f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:03}"
 
 
-    def log(self, msg, print=True):
+    def log(self, msg, print=True, dark=False):
         """ Register a log, and print it (default) """
         str = f"[LOG]\t {self.get_time_date()}\t- " + msg
         self.buffer += str + "\n"
-        
+
         if print:
-            self.print(str)
+            color = Colors.BLACK if dark else Colors.WHITE
+            self.print(str, color=color)
 
     def warn(self, msg, print=True):
         """ Register a warning log [PURPLE] """
