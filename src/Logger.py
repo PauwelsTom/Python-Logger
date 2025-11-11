@@ -41,7 +41,7 @@ class Logger:
     
     def init(self):
         """ Initialize logger """
-        self.cadre("DEBUT DES LOGS", padding=2, color=Colors.BLUE)
+        self.cadre("BEGINNING OF LOGS", padding=2, color=Colors.BLUE)
         if self.time_mode == TimeMode.CHRONO:
             self.start_timer()
 
