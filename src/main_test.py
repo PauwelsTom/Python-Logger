@@ -17,3 +17,6 @@ if "__main__":
     test_debug()
     test_save()
     test_save_fail()
+    test_chrono()
+    test_date()
+    test_time()

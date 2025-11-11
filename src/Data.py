@@ -16,3 +16,8 @@ class Colors(Enum):
     ORANGE = "\033[38;5;208m"
     DARK_ORANGE = "\033[38;5;202m"
     CYAN = "\033[36m"
+
+class TimeMode(Enum):
+    CHRONO = "Chrono"
+    DATE = "Date"
+    TIME = "Time"

@@ -1,10 +1,14 @@
-from Colors import Colors
+from Data import Colors, TimeMode
+import time
+from datetime import datetime
 
 class Logger:
-    def __init__(self, debug=False):
+    def __init__(self, debug=False, time_mode=TimeMode.CHRONO):
         self.default_color = Colors.DEFAULT
         self.buffer = ""
         self.debug_mode = debug
+        self.time_mode = time_mode
+        self.start = None
         pass
 
     def print(self, msg, color=Colors.DEFAULT):
@@ -29,9 +33,41 @@ class Logger:
             
         print(self.default_color.value)
 
+    def start_timer(self):
+        """ Start log timer """
+        self.start = time.time()
+
+    def stop_timer(self):
+        """ Stop log timer """
+        res = time.time() - self.start
+        self.start = None
+        return res
+
+    def get_time_date(self):
+        """ Returns the time or the date """
+        if self.time_mode == TimeMode.DATE:
+            timestamp = time.time()
+            dt = datetime.fromtimestamp(timestamp)
+            return dt.strftime("%d/%m/%Y, %H:%M:%S")
+        elif self.time_mode == TimeMode.TIME:
+            timestamp = time.time()
+            dt = datetime.fromtimestamp(timestamp)
+            ms = dt.microsecond // 1000
+            return dt.strftime("%H:%M:%S") + f".{ms:03}"
+        else:
+            if self.start is None:
+                return "............"
+            elapsed = time.time() - self.start
+            hours = int(elapsed // 3600)
+            minutes = int((elapsed % 3600) // 60)
+            seconds = int(elapsed % 60)
+            milliseconds = int((elapsed * 1000) % 1000)
+            return f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:03}"
+
+
     def log(self, msg, print=True):
         """ Register a log, and print it (default) """
-        str = "[LOG]\t - " + msg
+        str = f"[LOG]\t {self.get_time_date()}\t- " + msg
         self.buffer += str + "\n"
         
         if print:
@@ -39,7 +75,7 @@ class Logger:
 
     def warn(self, msg, print=True):
         """ Register a warning log [PURPLE] """
-        str = "[WARN]\t - " + msg
+        str = f"[WARN]\t {self.get_time_date()}\t- " + msg
         self.buffer += str + "\n"
         
         if print:
@@ -47,7 +83,7 @@ class Logger:
     
     def error(self, msg, print=True):
         """ Register an error log [RED] """
-        str = "[ERROR]\t - " + msg
+        str = f"[ERROR]\t {self.get_time_date()}\t- " + msg
         self.buffer += str + "\n"
         
         if print:
@@ -55,7 +91,7 @@ class Logger:
     
     def success(self, msg, print=True):
         """ Register a success log [GREEN] """
-        str = "[SUCCES] - " + msg
+        str = f"[SUCCES] {self.get_time_date()}\t- " + msg
         self.buffer += str + "\n"
         
         if print:
@@ -63,7 +99,7 @@ class Logger:
     
     def fail(self, msg, print=True):
         """ Register a fail log [RED] """
-        str = "[FAILED] - " + msg
+        str = f"[FAILED] {self.get_time_date()}\t- " + msg
         self.buffer += str + "\n"
         
         if print:
@@ -71,7 +107,7 @@ class Logger:
 
     def debug(self, msg):
         """ Print a debug output. Can be disabled setting self.debug = False """
-        str = "[DEBUG]\t - " + msg
+        str = f"[DEBUG]\t {self.get_time_date()}\t- " + msg
         self.buffer += str + "\n"
         
         if self.debug_mode:

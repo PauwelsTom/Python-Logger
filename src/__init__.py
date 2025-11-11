@@ -1,4 +1,4 @@
 from .Logger import Logger
-from .Colors import Colors
+from .Data import Colors
 
-__all__ = ["Logger", "Colors"]
+__all__ = ["Logger", "Data"]
