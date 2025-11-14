@@ -13,6 +13,10 @@ class Logger:
         if clear:
             self.clear_stdout()
 
+
+    #! --------------- STDOUT ---------------
+
+
     def clear_stdout(self):
         """ Clearing stdout """
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -39,6 +43,10 @@ class Logger:
             
         print(self.default_color.value)
     
+
+    #! --------------- MACRO ---------------
+
+
     def init(self):
         """ Initialize logger """
         self.cadre("BEGINNING OF LOGS", padding=2, color=Colors.BLUE)
@@ -53,24 +61,16 @@ class Logger:
     def end(self, path="./file.log"):
         """ End of logs """
         elapsed = self.stop_timer()
-        temps = ""
-        hours = int(elapsed // 3600)
-        if hours > 0:
-            temps += f"{hours:02}h "
-
-        minutes = int((elapsed % 3600) // 60)
-        if minutes > 0 or temps != "":
-            temps += f"{minutes:02}min "
-
-        seconds = int(elapsed % 60)
-        if seconds > 0 or temps != "":
-            temps += f"{seconds:02}s "
+        temps = self.printable_time(elapsed)
 
         milliseconds = int((elapsed * 1000) % 1000)
-        temps += f"{milliseconds:03}ms"
+        temps += f" {milliseconds:03}ms"
         self.section("END OF LOGS", char="=", color=Colors.BLUE)
         self.print(f"\nExecution time: {temps}\n", color=Colors.BLUE)
         self.save(path)
+
+
+    #! --------------- TIME ---------------
 
 
     def start_timer(self):
@@ -103,6 +103,25 @@ class Logger:
             seconds = int(elapsed % 60)
             milliseconds = int((elapsed * 1000) % 1000)
             return f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:03}"
+        
+    def printable_time(self, t):
+        """ Returns time at format 2h 42min 42sec"""
+        temps = ""
+        hours = int(t // 3600)
+        if hours > 0:
+            temps += f"{hours:02}h "
+
+        minutes = int((t % 3600) // 60)
+        if minutes > 0 or temps != "":
+            temps += f"{minutes:02}min "
+
+        seconds = int(t % 60)
+        if seconds > 0 or temps != "":
+            temps += f"{seconds:02}s"
+        
+        return temps
+
+    #! --------------- LOG TYPES ---------------
 
 
     def log(self, msg, print=True, dark=False):
@@ -154,6 +173,10 @@ class Logger:
         if self.debug_mode:
             self.print(str, color=Colors.YELLOW)
 
+
+    #! --------------- DISPLAY SHAPES ---------------
+
+
     def section(self, name, length=80, char=".", padding=2, color=Colors.DEFAULT):
         """ Create a separator to differenciate sections in log """
         remaining = length - len(name)
@@ -186,6 +209,10 @@ class Logger:
         print(char * length)
         print(self.default_color.value)
     
+    
+    #! --------------- SAVE ---------------
+
+
     def save(self, path="./file.log"):
         """ Save logs into logfile """
         try:
@@ -195,3 +222,13 @@ class Logger:
         except Exception as e:
             self.fail(f"Could not save logs: {e}")
 
+    #! --------------- WAITER ---------------
+
+    def waiting_time(self, t):
+        """ Print a timer that show time """
+        print(f"{self.default_color.value}Time waiting: {self.printable_time(t)}", flush=True, end='')
+    
+    def waiting_animation(self, msg):
+        """ Print a waiting animation """
+        # TODO: Rajouter le handler de l'animation
+        print(f"{self.default_color.value}{msg} ", flush=True, end='')
