@@ -1,6 +1,6 @@
 [project]
 name = "logger-pauwels"
-version = "0.1.0"
+version = "0.1.3"
 description = "Simple logger to have fancy logs :D"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -16,4 +16,5 @@ Repository = "https://github.com/PauwelsTom/Python-Logger"
 Issues = "https://github.com/PauwelsTom/Python-Logger/issues"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
+include = ["logger_pauwels*"]
