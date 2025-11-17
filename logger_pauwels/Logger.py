@@ -68,9 +68,9 @@ class Logger:
     #! --------------- MACRO ---------------
 
 
-    def init(self):
+    def init(self, msg="BEGINNING OF LOGS"):
         """ Initialize logger """
-        self.cadre("BEGINNING OF LOGS", padding=2, color=Colors.BLUE)
+        self.cadre(msg, padding=2, color=Colors.BLUE)
         if self.time_mode == TimeMode.CHRONO:
             self.start_timer()
 
@@ -86,8 +86,9 @@ class Logger:
 
         milliseconds = int((elapsed * 1000) % 1000)
         temps += f" {milliseconds:03}ms"
-        self.section("END OF LOGS", char="=", color=Colors.BLUE)
-        self.print(f"\nExecution time: {temps}\n", color=Colors.BLUE)
+        self.default_color = Colors.BLUE
+        self.section("END OF LOGS", char="=")
+        self.log(f"Execution time: {temps}\n")
         self.save(path)
 
 
@@ -198,38 +199,32 @@ class Logger:
     #! --------------- DISPLAY SHAPES ---------------
 
 
-    def section(self, name, length=80, char=".", padding=2, color=Colors.DEFAULT):
+    def section(self, name, length=80, char=".", padding=2, color=None):
         """ Create a separator to differenciate sections in log """
         remaining = length - len(name)
         half = remaining // 2
-        print(
-            color.value
-            + "\n" * padding
-            + char * (half - 1)
-            + f" {name} "
-            + char * (remaining - half - 1)
-            + "\n" * (padding - 1)
-            + self.default_color.value
-        )
+        section = "\n" * padding + \
+            char * (half - 1) + f" {name} " + char * (remaining - half - 1) + \
+            "\n" * (padding - 1)
+        
+        self.print(section, color=color)
+        self.buffer += section + "\n"
     
-    def cadre(self, name, length=80, padding=1, color=Colors.DEFAULT):
+    def cadre(self, name, length=80, padding=1, color=None):
         """ Print a rectangle avec le nom au milieu """
         remaining = length - len(name)
         half = remaining // 2
         char = "#"
-        print(color.value)
-        print(char * length)
-        print((char + " " * (length - 2) + char + "\n") * padding, end="")
-        print(
-            "#" + " " * (half - 2)
-            + f" {name} "
-            + " " * (remaining - half - 2) + "#" + "\n",
-            end=""
-        )
-        print((char + " " * (length - 2) + char + "\n") * padding, end="")
-        print(char * length)
-        print(self.default_color.value)
-    
+
+        cadre = "\n" + char * length + "\n" + \
+            (char + " " * (length - 2) + char + "\n") * padding + \
+            "#" + " " * (half - 2) + f" {name} " + " " * (remaining - half - 2) + "#" + "\n" + \
+            (char + " " * (length - 2) + char + "\n") * padding + \
+            char * length + "\n"
+
+        self.print(cadre, color=color)
+        self.buffer += cadre + "\n"
+
     
     #! --------------- SAVE ---------------
 
@@ -260,4 +255,4 @@ class Logger:
     def progress_bar(self, p, char="■", length=50, color=None):
         """ Display a progress bar """
         progress = int(p * length)
-        self.print_flush(f"[{char * progress}{"." * (length - progress)}]", color=color)
+        self.print_flush(f"[{int(p * 100):02}%] [{char * progress}{"." * (length - progress)}]", color=color)

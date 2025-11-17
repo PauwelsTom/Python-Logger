@@ -112,3 +112,32 @@ def test_progress_bar():
         time.sleep(3 / max)
     l.progress_bar(1, color=Colors.YELLOW)
     l.success("Fin de la progress bar")
+
+def demonstration():
+    l = Logger(debug=False)
+    l.init(msg="Logger Pauwels demonstration")
+    l.log("Testing log system")
+    l.section("Progress bar", char=".", color=Colors.YELLOW)
+
+    steps = 200
+    duration = 5    # In seconds
+    for i in range(steps):
+        l.progress_bar(i/steps, color=Colors.CYAN)
+        time.sleep(duration / steps)
+
+    l.success("Loading bar: OK")
+
+    l.cadre("Waiting time", color=Colors.PINK)
+
+    for i in range(steps):
+        elapsed_time = duration*i/steps + 60
+        l.waiting_time(elapsed_time)
+        time.sleep(duration / steps)
+
+    l.success("Waiting ended")
+
+    l.cadre("Thanks for using me :D", color=Colors.RED)
+
+    l.print_rainbow("For any problem, contact me: tom.j.pauwels@gmail.com")
+
+    l.end()

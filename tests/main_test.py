@@ -23,4 +23,5 @@ if "__main__":
     # simulation_utilisation()
     # test_waiting_animation()
     # test_waiting_time()
-    test_progress_bar()
+    # test_progress_bar()
+    demonstration()

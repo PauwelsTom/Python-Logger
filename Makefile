@@ -17,3 +17,6 @@ endif
 publish:
 	python -m build
 	twine upload dist/*
+
+test:
+	python tests/main_test.py
