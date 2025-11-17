@@ -20,4 +20,7 @@ if "__main__":
     # test_chrono()
     # test_date()
     # test_time()
-    simulation_utilisation()
+    # simulation_utilisation()
+    # test_waiting_animation()
+    # test_waiting_time()
+    test_progress_bar()

@@ -10,6 +10,7 @@ class Logger:
         self.debug_mode = debug
         self.time_mode = time_mode
         self.start = None
+        self.flush = False
         if clear:
             self.clear_stdout()
 
@@ -21,12 +22,32 @@ class Logger:
         """ Clearing stdout """
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def print(self, msg, color=Colors.DEFAULT):
+    def print(self, msg, color=None):
         """ Print into stdout """
+        if self.flush:
+            print()
+            self.flush = False
+
+        if color is None:
+            color = self.default_color
+
         print(color.value + msg + self.default_color.value)
+    
+    def print_flush(self, msg, color=None):
+        """ Print into stdout to flush """
+        self.flush = True
+        if color is None:
+            color = self.default_color
+
+        print("\r" + color.value + msg + self.default_color.value, end="", flush=True)
+        
 
     def print_rainbow(self, msg):
         """ Print with rainbow colors """
+        if self.flush:
+            print()
+            self.flush = False
+
         color_loop = [
             Colors.PURPLE,
             Colors.BLUE,
@@ -224,11 +245,19 @@ class Logger:
 
     #! --------------- WAITER ---------------
 
-    def waiting_time(self, t):
+    def waiting_time(self, t, color=None):
         """ Print a timer that show time """
-        print(f"{self.default_color.value}Time waiting: {self.printable_time(t)}", flush=True, end='')
+        self.print_flush(f"Time waiting: {self.printable_time(t)}", color=color)
     
-    def waiting_animation(self, msg):
-        """ Print a waiting animation """
-        # TODO: Rajouter le handler de l'animation
-        print(f"{self.default_color.value}{msg} ", flush=True, end='')
+    def waiting_animation(self, msg, duration=1, color=None):
+        """ Print a waiting animation for a given duration """
+        frames = ["[-]", "[/]", "[|]", "[\\]"]
+        for _ in range(duration):
+            for frame in frames:
+                self.print_flush(f"{frame} {msg}", color=color)
+                time.sleep(1 / len(frames))
+    
+    def progress_bar(self, p, char="■", length=50, color=None):
+        """ Display a progress bar """
+        progress = int(p * length)
+        self.print_flush(f"[{char * progress}{"." * (length - progress)}]", color=color)

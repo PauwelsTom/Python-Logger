@@ -91,3 +91,24 @@ def simulation_utilisation():
     time.sleep(0.5)
     l.error("Pas d'accès internet")
     l.end()
+
+def test_waiting_animation():
+    l.section("Test animation")
+    l.waiting_animation("Animation d'attente", duration=3)
+    l.success("Fin de l'animation")
+
+def test_waiting_time():
+    l.section("Test timer")
+    for i in range(5):
+        l.waiting_time(i)
+        time.sleep(1)
+    l.success("Fin du timer")
+
+def test_progress_bar():
+    l.section("Test Progress bar")
+    max = 100
+    for i in range(max):
+        l.progress_bar(i/max, color=Colors.YELLOW)
+        time.sleep(3 / max)
+    l.progress_bar(1, color=Colors.YELLOW)
+    l.success("Fin de la progress bar")
