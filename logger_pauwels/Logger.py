@@ -82,7 +82,7 @@ class Logger:
         self.log("Debut des logs\n", dark=True)
         self.time_mode = mode
     
-    def end(self, filename="file", foldername="./"):
+    def end(self, path="./file.html"):
         """ End of logs and save it into a file """
         elapsed = self.stop_timer()
         temps = self.printable_time(elapsed)
@@ -93,7 +93,7 @@ class Logger:
         self.section("END OF LOGS", char="=")
         self.log(f"Execution time: {temps}\n")
         self.buffer += get_end()
-        self.save(filename, foldername)
+        self.save(path)
 
 
     #! --------------- TIME ---------------
@@ -265,8 +265,16 @@ class Logger:
     #! --------------- SAVE ---------------
 
 
-    def save(self, filename="file", foldername="./"):
+    def save(self, path="./file.html"):
         """ Save logs into logfile """
+
+        path = path.split("/")
+
+        foldername = ""
+        if len(path) > 1:
+            foldername = "/".join(path[:-1]) + "/"
+
+        filename = path[-1].split(".")[0]
 
         if self.html:
             filename += ".html"

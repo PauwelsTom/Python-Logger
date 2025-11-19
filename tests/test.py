@@ -145,4 +145,4 @@ def demonstration():
 
     l.print_rainbow("For any problem, contact me: tom.j.pauwels@gmail.com")
 
-    l.end()
+    l.end("tests/demonstration.html")
