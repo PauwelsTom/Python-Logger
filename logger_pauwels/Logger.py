@@ -2,15 +2,17 @@ from .Data import Colors, TimeMode
 import time
 import os
 from datetime import datetime
+from .html_functions import *
 
 class Logger:
-    def __init__(self, debug=False, time_mode=TimeMode.CHRONO, clear=True):
+    def __init__(self, debug=False, time_mode=TimeMode.CHRONO, clear=True, html=True):
         self.default_color = Colors.DEFAULT
         self.buffer = ""
         self.debug_mode = debug
         self.time_mode = time_mode
         self.start = None
         self.flush = False
+        self.html = html
         if clear:
             self.clear_stdout()
 
@@ -70,6 +72,7 @@ class Logger:
 
     def init(self, msg="BEGINNING OF LOGS"):
         """ Initialize logger """
+        self.buffer += get_start()
         self.cadre(msg, padding=2, color=Colors.BLUE)
         if self.time_mode == TimeMode.CHRONO:
             self.start_timer()
@@ -79,8 +82,8 @@ class Logger:
         self.log("Debut des logs\n", dark=True)
         self.time_mode = mode
     
-    def end(self, path="./file.log"):
-        """ End of logs """
+    def end(self, filename="file", foldername="./"):
+        """ End of logs and save it into a file """
         elapsed = self.stop_timer()
         temps = self.printable_time(elapsed)
 
@@ -89,7 +92,8 @@ class Logger:
         self.default_color = Colors.BLUE
         self.section("END OF LOGS", char="=")
         self.log(f"Execution time: {temps}\n")
-        self.save(path)
+        self.buffer += get_end()
+        self.save(filename, foldername)
 
 
     #! --------------- TIME ---------------
@@ -149,7 +153,11 @@ class Logger:
     def log(self, msg, print=True, dark=False):
         """ Register a log, and print it (default) """
         str = f"[LOG]\t {self.get_time_date()}\t- " + msg
-        self.buffer += str + "\n"
+        
+        if self.html:
+            self.buffer += get_log(str)
+        else:
+            self.buffer += str + "\n"
 
         if print:
             color = Colors.BLACK if dark else self.default_color
@@ -158,7 +166,11 @@ class Logger:
     def warn(self, msg, print=True):
         """ Register a warning log [PURPLE] """
         str = f"[WARN]\t {self.get_time_date()}\t- " + msg
-        self.buffer += str + "\n"
+                
+        if self.html:
+            self.buffer += get_warn(str)
+        else:
+            self.buffer += str + "\n"
         
         if print:
             self.print(str, color=Colors.PURPLE)
@@ -166,7 +178,11 @@ class Logger:
     def error(self, msg, print=True):
         """ Register an error log [RED] """
         str = f"[ERROR]\t {self.get_time_date()}\t- " + msg
-        self.buffer += str + "\n"
+                
+        if self.html:
+            self.buffer += get_error(str)
+        else:
+            self.buffer += str + "\n"
         
         if print:
             self.print(str, color=Colors.RED)
@@ -174,7 +190,11 @@ class Logger:
     def success(self, msg, print=True):
         """ Register a success log [GREEN] """
         str = f"[SUCCES] {self.get_time_date()}\t- " + msg
-        self.buffer += str + "\n"
+                
+        if self.html:
+            self.buffer += get_succes(str)
+        else:
+            self.buffer += str + "\n"
         
         if print:
             self.print(str, color=Colors.GREEN)
@@ -182,7 +202,11 @@ class Logger:
     def fail(self, msg, print=True):
         """ Register a fail log [RED] """
         str = f"[FAILED] {self.get_time_date()}\t- " + msg
-        self.buffer += str + "\n"
+                
+        if self.html:
+            self.buffer += get_failed(str)
+        else:
+            self.buffer += str + "\n"
         
         if print:
             self.print(str, color=Colors.RED)
@@ -190,7 +214,11 @@ class Logger:
     def debug(self, msg):
         """ Print a debug output. Can be disabled setting self.debug = False """
         str = f"[DEBUG]\t {self.get_time_date()}\t- " + msg
-        self.buffer += str + "\n"
+                
+        if self.html:
+            self.buffer += get_debug(str)
+        else:
+            self.buffer += str + "\n"
         
         if self.debug_mode:
             self.print(str, color=Colors.YELLOW)
@@ -208,7 +236,11 @@ class Logger:
             "\n" * (padding - 1)
         
         self.print(section, color=color)
-        self.buffer += section + "\n"
+                
+        if self.html:
+            self.buffer += get_section(name)
+        else:
+            self.buffer += section + "\n"
     
     def cadre(self, name, length=80, padding=1, color=None):
         """ Print a rectangle avec le nom au milieu """
@@ -223,18 +255,28 @@ class Logger:
             char * length + "\n"
 
         self.print(cadre, color=color)
-        self.buffer += cadre + "\n"
+                
+        if self.html:
+            self.buffer += get_cadre(name)
+        else:
+            self.buffer += cadre + "\n"
 
     
     #! --------------- SAVE ---------------
 
 
-    def save(self, path="./file.log"):
+    def save(self, filename="file", foldername="./"):
         """ Save logs into logfile """
+
+        if self.html:
+            filename += ".html"
+        else:
+            filename += ".log"
+
         try:
-            with open(path, "w", encoding="utf-8") as f:
+            with open(foldername + filename, "w", encoding="utf-8") as f:
                 f.write(self.buffer)
-            self.success(f"Logs saved to {path}")
+            self.success(f"Logs saved to {foldername}{filename}")
         except Exception as e:
             self.fail(f"Could not save logs: {e}")
 
@@ -255,4 +297,4 @@ class Logger:
     def progress_bar(self, p, char="■", length=50, color=None):
         """ Display a progress bar """
         progress = int(p * length)
-        self.print_flush(f"[{int(p * 100):02}%] [{char * progress}{"." * (length - progress)}]", color=color)
+        self.print_flush(f"[{int(p * 100):02}%] [{char * progress}{'.' * (length - progress)}]", color=color)

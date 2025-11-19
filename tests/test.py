@@ -127,7 +127,7 @@ def demonstration():
 
     l.success("Loading bar: OK")
 
-    l.cadre("Waiting time", color=Colors.PINK)
+    l.section("Waiting time", color=Colors.PINK)
 
     for i in range(steps):
         elapsed_time = duration*i/steps + 60
@@ -135,6 +135,11 @@ def demonstration():
         time.sleep(duration / steps)
 
     l.success("Waiting ended")
+    l.debug("Debug message")
+    l.warn("Warning message")
+    l.error("Error message")
+    l.fail("Fail message")
+
 
     l.cadre("Thanks for using me :D", color=Colors.RED)
 

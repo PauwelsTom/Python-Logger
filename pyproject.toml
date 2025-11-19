@@ -1,6 +1,6 @@
 [project]
 name = "logger-pauwels"
-version = "0.1.5"
+version = "0.1.8"
 description = "Simple logger to have fancy logs :D"
 readme = "README.md"
 license = {file = "LICENSE"}

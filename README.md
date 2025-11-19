@@ -3,6 +3,18 @@ Logger for python that can write into stdout, create a log file at the end.
 
 ## Usage
 
+### Output file
+
+The output file can be in 2 formats: `.html` or `.log`
+To change this, you have a parameter in the constructor:
+```
+    l = Logger(html=True)
+```
+By default, the html mode is ON.
+
+*Note: HTML log files take a bit more space, so if you generate many logs, consider using `.log` files*
+
+
 ### Colors
 
 There are multiple colors available, you can use them using Colors.<COLOR>
@@ -74,27 +86,36 @@ My message 4h 2min 42sec
 Here is a code exampleto show posibilities
 
 ```
-from logger_pauwels import Logger, Colors
-import time
+    l = Logger(debug=False)
+    l.init(msg="Logger Pauwels demonstration")
+    l.log("Testing log system")
+    l.section("Progress bar", char=".", color=Colors.YELLOW)
 
-l = Logger(debug=False)
-l.init(msg="Logger Pauwels demonstration")
-l.log("Testing log system")
-l.section("Progress bar", char=".", color=Colors.YELLOW)
+    steps = 200
+    duration = 5    # In seconds
+    for i in range(steps):
+        l.progress_bar(i/steps, color=Colors.CYAN)
+        time.sleep(duration / steps)
 
-steps = 200
-duration = 5    # In seconds
-for i in range(steps):
-    l.progress_bar(i/steps, color=Colors.YELLOW)
-    time.sleep(duration / steps)
+    l.success("Loading bar: OK")
 
-l.cadre("Waiting time", color=Colors.BLUE)
+    l.section("Waiting time", color=Colors.PINK)
 
-for i in range(steps):
-    l.waiting_time(i/duration)
-    time.sleep(duration / steps)
+    for i in range(steps):
+        elapsed_time = duration*i/steps + 60
+        l.waiting_time(elapsed_time)
+        time.sleep(duration / steps)
 
-l.cadre("Thanks for using me :D", color=Colors.RED)
+    l.success("Waiting ended")
+    l.debug("Debug message")
+    l.warn("Warning message")
+    l.error("Error message")
+    l.fail("Fail message")
 
-l.end()
+
+    l.cadre("Thanks for using me :D", color=Colors.RED)
+
+    l.print_rainbow("For any problem, contact me: tom.j.pauwels@gmail.com")
+
+    l.end()
 ```
